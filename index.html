@@ -1,39 +1,36 @@
 <!doctype html>
-
-<h5>This is a simple demo of Pubnub Real-time Network Data Push. To show how this works, open multiple browsers, click on one button to update all browsers. PubNub allows you to establish and maintain persistent socket connections to any device (mobile, browser, desktop and server) and it is fast!. </p></h5> 
-
-<button id=button>See Mountain Bike</button> 
+<h5>This is a simple demo of Pubnub Real-time Network Data Push. To show how this works, open multiple browsers, click on one button to update all browsers. PubNub allows you to establish and maintain persistent socket connections to any device (mobile, browser, desktop and server) and it is fast!. </p></h5>
+<button id=button>See Mountain Bike</button>
 <div><img id=image></div>
 <title>Simple Push Demo</title>
-
 <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
+<script>
+(function() {
+    var button = PUBNUB.$('button');
+    var image = PUBNUB.$('image');
+    var pubnub = PUBNUB.init({
+        publish_key: 'pub-c-741071be-9fe7-4ea5-a161-b66e40b1785d',
+        subscribe_key: 'sub-c-3dee921c-6df3-11e5-9025-02ee2ddab7fe'
+    });
 
-<script>(function(){
-var button = PUBNUB.$('button');
-var image = PUBNUB.$('image');
-var pubnub = PUBNUB.init({
-	publish_key: 'pub-c-741071be-9fe7-4ea5-a161-b66e40b1785d',
-  subscribe_key: 'sub-c-3dee921c-6df3-11e5-9025-02ee2ddab7fe'
-});
+    pubnub.subscribe({
+        channel: 'button-click',
+        message: recieved_button_click
+    });
 
-pubnub.subscribe({
-	channel : 'button-click',
-	message : recieved_button_click
-});
+    function recieved_button_click(message) {
+        image.src = 'http://brimages.bikeboardmedia.netdna-cdn.com/wp-content/uploads/2014/06/2015-Santa-Cruz-Tallboy-Carbon-S-mountain-bike.jpg'
+    }
 
-function recieved_button_click(message){
-	image.src = 'http://brimages.bikeboardmedia.netdna-cdn.com/wp-content/uploads/2014/06/2015-Santa-Cruz-Tallboy-Carbon-S-mountain-bike.jpg'
-}
+    pubnub.bind('click', button, function() {
+        pubnub.publish({
+            channel: 'button-click',
+            message: 'go'
+        });
 
-pubnub.bind( 'click', button, function(){
-	pubnub.publish({
-		channel : 'button-click',
-		message : 'go'
-	});
-
-});
+    });
 
 
 
-})();</script>
-
+})();
+</script>
